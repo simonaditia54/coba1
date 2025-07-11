@@ -628,7 +628,7 @@ IS
     V_TAX_REFERENCE_LONG  PLS_INTEGER;
     OUID                  PLS_INTEGER DEFAULT FND_PROFILE.VALUE( 'ORG_ID' );
     V_TAX_REF_0           HZ_CUST_SITE_USES_ALL.TAX_REFERENCE%TYPE; --kristina 10mei2016 utk npwp 000000000000000
-  BEGIN
+        BEGIN
     IF FORM_NAME IN ('OEXOETEL', 'OEXOEORD')
     THEN
       V_ORDER_TYPE_ID := NAME_IN( 'order.order_type_id' );
@@ -742,9 +742,12 @@ IS
                    , '' ) )
             INTO V_TAX_REFERENCE_LONG
             FROM HZ_CUST_SITE_USES_ALL
-           WHERE SITE_USE_ID = V_LOCATION_CUST_ID;
+           WHERE SITE_USE_ID = V_LOCATION_CUST_ID;  
+           
+           XXLIB_GEN.SHOW_MSG( 'nama EVENT:' );         
+           XXLIB_GEN.SHOW_MSG( EVENT );         
 
-          IF V_TAX_REFERENCE_LONG <> 15
+          IF V_TAX_REFERENCE_LONG <> 16
           OR ((INSTR( UPPER( V_TAX_REFERENCE ), 'A' )
                + INSTR( UPPER( V_TAX_REFERENCE ), 'B' )
                + INSTR( UPPER( V_TAX_REFERENCE ), 'C' )
@@ -773,12 +776,15 @@ IS
                + INSTR( UPPER( V_TAX_REFERENCE ), 'Z' )) <>
               0)
           THEN
-            V_ITEM := NAME_IN( 'LINE.INVENTORY_ITEM_ID' );
+            V_ITEM := NAME_IN( 'LINE.INVENTORY_ITEM_ID' );   
+            
+            XXLIB_GEN.SHOW_MSG( 'V_ITEM: ' );                             
+            XXLIB_GEN.SHOW_MSG( V_ITEM );
 
             IF EVENT = 'PRE-BLOCK'
            AND V_ITEM IS NULL
             THEN
-              XXLIB_GEN.SHOW_MSG( 'Customer ini no NPWP nya kurang dari 15 / Tidak valid' );
+              XXLIB_GEN.SHOW_MSG( 'Customer ini no NPWP nya kurang dari 16 / Tidak valid' );
             ELSIF EVENT IN ('AFTER-LINE')
             THEN
               BEGIN
